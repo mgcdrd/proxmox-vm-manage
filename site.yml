@@ -1,0 +1,30 @@
+---
+# ============================================================
+# ProxMox VM management — add/resize disks, add/update/remove NICs, and
+# create/delete/roll back snapshots on an already-provisioned VM.
+#
+# Ad hoc, not a standing service: define proxmox_vm_manage_disks / _nics /
+# _snapshots for the VM you're changing in inventory/host_vars/<hostname>.yml
+# (see host_vars/example.yml.example), or pass them via -e for a one-off
+# run, then:
+#
+#   ansible-playbook site.yml --limit <hostname>
+#
+# Each section only runs if its list has entries, so an unscoped run is a
+# no-op everywhere except hosts that actually define something — --limit is
+# for speed, not safety. Tags scope to one kind of change:
+#
+#   --tags storage | network | snapshot
+#
+# See mgcdrd.infrabase.proxmox_vm_manage's README for the full variable
+# reference and how each section maps to proxmox_disk/proxmox_nic/proxmox_snapshot.
+# ============================================================
+
+- name: ProxMox VM management
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - role: mgcdrd.infrabase.proxmox_vm_manage
+      vars:
+        proxmox_vm_manage_api_host: "{{ proxmox_vm_manage_pve_node }}.{{ domain }}"
