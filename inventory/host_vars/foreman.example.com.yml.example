@@ -1,0 +1,27 @@
+---
+# Worked example: the foreman host's disk spec, moved here 2026-08-20 when
+# deployments/foreman/site.yml stopped calling proxmox_disk/proxmox_nic
+# directly. Copy to inventory/host_vars/<your-foreman-hostname>.yml (matching
+# the hostname in ../../../../inventory-common/hosts.yml's `foreman` group)
+# and adjust slot/storage/size to your environment.
+#
+# Run this against the foreman host BEFORE deployments/foreman — that
+# deployment's LVM phase expects foreman_data_disk_device (its own vars.yml)
+# to already exist as a block device.
+
+proxmox_vm_manage_disks:
+  - slot: scsi1        # disk slot to add — must be free; must match
+                        # deployments/foreman's foreman_data_disk_device
+                        # once the guest OS assigns it a /dev/sdX name
+    storage: truenas    # PVE storage backend
+    size: "400"         # GiB, no suffix for state=present
+    state: present
+
+# Additional NICs, if this engagement's foreman host needs one beyond net0
+# (which stays owned by the VM's clone-time config either way). Leave unset
+# to skip — foreman doesn't need extra NICs by default.
+# proxmox_vm_manage_nics:
+#   - interface: net1
+#     bridge: vmbr1
+#     tag: 100
+#     state: present

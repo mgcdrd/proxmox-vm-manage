@@ -34,9 +34,10 @@ hosts this always runs against. You run it against one VM at a time.
    — set `proxmox_vm_manage_pve_node` if not `pve2`.
 2. `cp inventory/group_vars/all/vault.yml.example inventory/group_vars/all/vault.yml`
    — works as-is once Vault has `infra/<env>/proxmox/root` populated (already
-   true if you've run the `foreman` deployment's storage-expansion phase).
-   Uncomment the API token lines once a token exists (see that file for how
-   to mint one) — recommended for NIC/snapshot changes, not required.
+   true if `deployments/foreman` has been set up, since both deployments
+   share that same Vault path). Uncomment the API token lines once a token
+   exists (see that file for how to mint one) — recommended for NIC/snapshot
+   changes, not required.
 
 ---
 
@@ -103,10 +104,13 @@ doesn't reinvent it.
 - **No `proxmox_vm` (clone/lifecycle/template) coverage**: this deployment
   is for changes *after* a VM exists, same scope as the role it wraps.
   Cloning a new VM is out of scope here.
-- **`foreman`'s own ProxMox phases are unaffected**: `deployments/foreman/site.yml`
-  still manages its own disk/NIC via `proxmox_disk`/`proxmox_nic` directly,
-  inline with its other phases. This deployment is for VMs/changes that
-  don't belong to a specific service deployment's own playbook.
+- **`foreman` runs through this deployment now**: as of 2026-08-20,
+  `deployments/foreman/site.yml` no longer calls `proxmox_disk`/`proxmox_nic`
+  directly — its data disk and any additional NICs are provisioned here
+  first (see `inventory/host_vars/foreman.example.com.yml.example`), then
+  `deployments/foreman` runs against the already-provisioned VM. This
+  deployment is the one place VM-level ProxMox changes happen, whether or
+  not the VM belongs to a specific service deployment's own playbook.
 
 ---
 
