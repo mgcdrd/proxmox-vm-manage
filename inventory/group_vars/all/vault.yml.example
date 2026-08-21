@@ -8,15 +8,13 @@
 # vault.yml is gitignored — never commit it.
 
 # Password auth — reuses the same infra/<env>/proxmox/root secret the
-# foreman deployment's ProxMox storage-expansion phase uses. Always
-# required: the disk sub-role (community.general.proxmox_disk) predates
-# token support, so this is the only auth method it accepts.
+# foreman deployment's ProxMox storage-expansion phase uses.
 vault_proxmox_api_password: "{{ lookup('community.hashi_vault.vault_kv2_get', vault_kv_env + '/proxmox/root', engine_mount_point=vault_kv_infra_mount, url=vault_addr).secret[proxmox_vm_manage_pve_node + '_password'] }}"
 
-# API token auth (recommended, scoped/revocable) — used by the NIC/snapshot
-# sub-roles when set; the disk sub-role ignores it. Optional: only uncomment
-# once a token exists. Mint one in PVE (Datacenter -> Permissions -> API
-# Tokens) with at least VM.Config.Disk, VM.Config.Network, and VM.Snapshot
-# on the relevant path, then store it at infra/<env>/proxmox/api_token.
+# API token auth (recommended, scoped/revocable) — used by all three
+# sub-roles (disk/NIC/snapshot) when set. Optional: only uncomment once a
+# token exists. Mint one in PVE (Datacenter -> Permissions -> API Tokens)
+# with at least VM.Config.Disk, VM.Config.Network, and VM.Snapshot on the
+# relevant path, then store it at infra/<env>/proxmox/api_token.
 # vault_proxmox_api_token_id:     "{{ lookup('community.hashi_vault.vault_kv2_get', vault_kv_env + '/proxmox/api_token', engine_mount_point=vault_kv_infra_mount, url=vault_addr).secret.token_id }}"
 # vault_proxmox_api_token_secret: "{{ lookup('community.hashi_vault.vault_kv2_get', vault_kv_env + '/proxmox/api_token', engine_mount_point=vault_kv_infra_mount, url=vault_addr).secret.token_secret }}"

@@ -36,8 +36,8 @@ hosts this always runs against. You run it against one VM at a time.
    — works as-is once Vault has `infra/<env>/proxmox/root` populated (already
    true if `deployments/foreman` has been set up, since both deployments
    share that same Vault path). Uncomment the API token lines once a token
-   exists (see that file for how to mint one) — recommended for NIC/snapshot
-   changes, not required.
+   exists (see that file for how to mint one) — recommended over password
+   auth, not required.
 
 ---
 
@@ -83,8 +83,8 @@ This repo sets:
 | Variable | Where | Purpose |
 |---|---|---|
 | `proxmox_vm_manage_pve_node` | `group_vars/all/env.yml` | Which PVE node's API to hit (any node manages the whole cluster) |
-| `vault_proxmox_api_password` | `group_vars/all/vault.yml` | Password auth — always required (disk sub-role has no token support) |
-| `vault_proxmox_api_token_id` / `_secret` | `group_vars/all/vault.yml` (optional) | Token auth — used by the NIC/snapshot sub-roles when set |
+| `vault_proxmox_api_password` | `group_vars/all/vault.yml` | Password auth |
+| `vault_proxmox_api_token_id` / `_secret` | `group_vars/all/vault.yml` (optional) | Token auth (recommended) — used by all three sub-roles when set |
 | `proxmox_vm_manage_disks` / `_nics` / `_snapshots` | `host_vars/<hostname>.yml` or `-e` | Per-VM spec — the actual work to do |
 
 Everything else — `proxmox_vm_manage_api_user`, `proxmox_vm_manage_vm_name`
