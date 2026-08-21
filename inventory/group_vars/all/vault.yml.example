@@ -18,3 +18,10 @@ vault_proxmox_api_password: "{{ lookup('community.hashi_vault.vault_kv2_get', va
 # relevant path, then store it at infra/<env>/proxmox/api_token.
 # vault_proxmox_api_token_id:     "{{ lookup('community.hashi_vault.vault_kv2_get', vault_kv_env + '/proxmox/api_token', engine_mount_point=vault_kv_infra_mount, url=vault_addr).secret.token_id }}"
 # vault_proxmox_api_token_secret: "{{ lookup('community.hashi_vault.vault_kv2_get', vault_kv_env + '/proxmox/api_token', engine_mount_point=vault_kv_infra_mount, url=vault_addr).secret.token_secret }}"
+
+# Bridge into the vars mgcdrd.infrabase's proxmox_* roles actually read.
+# The collection no longer defaults these from vault_proxmox_api_* itself
+# (infrabase >= 0.15.0) — every deployment sets them once, here.
+proxmox_api_password: "{{ vault_proxmox_api_password }}"
+# proxmox_api_token_id:     "{{ vault_proxmox_api_token_id }}"
+# proxmox_api_token_secret: "{{ vault_proxmox_api_token_secret }}"

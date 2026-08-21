@@ -83,15 +83,16 @@ This repo sets:
 | Variable | Where | Purpose |
 |---|---|---|
 | `proxmox_vm_manage_pve_node` | `group_vars/all/env.yml` | Which PVE node's API to hit (any node manages the whole cluster) |
-| `vault_proxmox_api_password` | `group_vars/all/vault.yml` | Password auth |
-| `vault_proxmox_api_token_id` / `_secret` | `group_vars/all/vault.yml` (optional) | Token auth (recommended) — used by all three sub-roles when set |
+| `proxmox_api_host` | `site.yml` (from `proxmox_vm_manage_pve_node`) | The shared connection var every `proxmox_*` role reads — see `collections/infrabase/README.md` |
+| `proxmox_api_user` / `proxmox_validate_certs` | `group_vars/all/env.yml` | Non-secret connection vars — no collection default, set once here |
+| `vault_proxmox_api_password` → `proxmox_api_password` | `group_vars/all/vault.yml` | Password auth — the Vault lookup, bridged into the var the roles actually read |
+| `vault_proxmox_api_token_id` / `_secret` → `proxmox_api_token_id` / `_secret` | `group_vars/all/vault.yml` (optional) | Token auth (recommended) — used by all three sub-roles when set |
 | `proxmox_vm_manage_disks` / `_nics` / `_snapshots` | `host_vars/<hostname>.yml` or `-e` | Per-VM spec — the actual work to do |
 
-Everything else — `proxmox_vm_manage_api_user`, `proxmox_vm_manage_vm_name`
-(defaults to the inventory hostname), the full per-entry key list for
-disks/NICs/snapshots — is `mgcdrd.infrabase.proxmox_vm_manage`'s own
-interface. See that role's README for the complete reference; this repo
-doesn't reinvent it.
+Everything else — `proxmox_vm_manage_vm_name` (defaults to the inventory
+hostname), the full per-entry key list for disks/NICs/snapshots — is
+`mgcdrd.infrabase.proxmox_vm_manage`'s own interface. See that role's
+README for the complete reference; this repo doesn't reinvent it.
 
 ---
 

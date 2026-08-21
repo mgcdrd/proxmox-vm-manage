@@ -27,4 +27,4 @@
   roles:
     - role: mgcdrd.infrabase.proxmox_vm_manage
       vars:
-        proxmox_vm_manage_api_host: "{{ proxmox_vm_manage_pve_node }}.{{ domain }}"
+        proxmox_api_host: "{{ proxmox_vm_manage_pve_node }}.{{ domain }}"
